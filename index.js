@@ -22,7 +22,7 @@ app.use(function(req, res, next) {
 
 
 // Set up default mongoose connection
-let db_url = 'mongodb://127.0.0.1/db_exercise';
+let db_url = 'mongodb://127.0.0.1/db_exercise_erim';
 mongoose.connect(db_url, { useNewUrlParser: true });
 // Get the default connection
 var db = mongoose.connection;
@@ -46,12 +46,42 @@ const Rider = require('./models/rider.model');
 // Question 1 - Create a HTTP Request to add a riders in the database :
 // When we create a rider he doesn't have a score yet.
 
+app.post('/addRiders',(req, res)=>{
+    let addRidersToCreate = new Rider({
+        firstName: req.body.firstName,
+        lastName:req.body.lastName,
+        age:req.body.age
+    });
+
+    addRidersToCreate.save((err,addRiders)=>{
+        if(err){
+            res.send(err);
+        }
+        res.json(addRiders);
+    });
+});
+
 
 // Question 2 - Create a HTTP Request to fetch all the riders :
+
+app.get('/riders',(req,res)=>{
+    Rider.find({},(err, addRiders)=>{
+        if(err){
+            res.send(err);
+        }
+        res.json({addRiders:addRiders});
+    });
+});
 
 
 // Question 3 - Create a HTTP Request to fetch one rider :
 
+let myId =req.params.firstName;
+Rider.findOne({firstName: myId},function(err, rider){
+if(err){
+res.send(err)
+}
+res.json(rider)
 
 // Question 4 - Create a HTTP Request to update firstName or/and lastName of a rider :
 
